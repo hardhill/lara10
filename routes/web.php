@@ -16,7 +16,15 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Index', [\App\Http\Controllers\MainController::class,'index']);
+    return Inertia::render('Index',
+        [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+            'points' => []
+        ]
+    );
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
