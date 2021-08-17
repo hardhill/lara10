@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Point;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,13 +17,14 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    $points = Point::all();
     return Inertia::render('Index',
         [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
-            'points' => []
+            'points' => $points
         ]
     );
 });

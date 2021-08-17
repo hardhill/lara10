@@ -25,13 +25,25 @@
                     <div class="lg:w-96">
                         <div class="pt-2 px-4 text-gray-700 bg-green-100">Points</div>
                         <div class="overflow-y-auto h-32 lg:h-128">
-                            <div class="p-4" v-for="x in points" :key="x">Lorem ipsum</div>
+                            <div class="p-4" v-for="point in points" :key="point.id">
+                                <div class="flex flex-row justify-between items-center hover:bg-gray-100 cursor-pointer "
+                                    @click="gotPoint(point)">
+                                    <div>Picture</div>
+                                    <div class="flex flex-col">
+                                        <div> Lat: {{point.latitude}} Lon:{{point.longitude}}</div>
+                                        <div>{{point.name}}</div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
+
                     </div>
                     <div class="xl:w-208 flex justify-center">
                         <div id="ymap" class="h-144 w-144   xl:w-208"></div>
                     </div>
                 </div>
+                
             </div>
 
             <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
@@ -135,11 +147,13 @@
 
 <script>
     import {Head, Link} from '@inertiajs/inertia-vue3';
+   
 
     export default {
         components: {
             Head,
             Link,
+            
         },
 
         props: {
@@ -149,10 +163,25 @@
             phpVersion: String,
             points:Array
         },
+        data(){
+            return {
+                myMap:{},
+                settings:{
+                    apiKey: 'c6eaddcd-0762-4d04-8e00-9bd344e1e9f2',
+                    lang: 'ru_RU',
+                    coordorder: 'latlong',
+                    version: '2.1'
+                },
+                coords:[34,35],
+                zoom:7
+            }
+        },
         methods: {
             mapInit() {
+
                 ymaps.ready(init);
                 function init() {
+
                     var myMap = new ymaps.Map("ymap", {
                         center: [34, 53],
                         zoom: 7,
@@ -169,9 +198,20 @@
                             iconColor: '#0840cd'
                         }))
                 }
+            },
+            gotPoint(point){
+                var myMap = new ymaps.Map("ymap", {
+                    center: [point.latitude, point.longitude],
+                    zoom: 7,
+                    controls:[]
+                }, {
+                    searchControlProvider: 'yandex#search'
+                });
+
             }
         },
         mounted() {
+
             this.mapInit()
         }
     }
